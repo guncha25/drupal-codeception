@@ -54,7 +54,6 @@ class DrupalWatchdog extends Module {
     if (\Drupal::moduleHandler()->moduleExists('dblog')) {
       foreach ($this->config['channels'] as $channel => $level) {
         if (is_string($level) && !empty($this->logLevels[strtoupper($level)])) {
-          $level = strtoupper($this);
           // Load any database log entries of level WARNING or more serious.
           $query = \Drupal::database()->select('watchdog', 'w');
           $query->fields('w', ['type', 'severity', 'message', 'variables'])
