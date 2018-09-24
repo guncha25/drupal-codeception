@@ -59,20 +59,21 @@ class DrupalWatchdog extends Module {
     $channels = $this->_getConfig('channels');
     if (!empty($channels) && is_array($channels)) {
       foreach ($this->_getConfig('channels') as $channel => $level) {
-        if (is_string($level) && !empty($this->logLevels[strtoupper($level)])) {
-          $this->processResult($this->getLogResults($level, $channel));
+        if (is_string($level) && isset($this->logLevels[strtoupper($level)])) {
+          $this->processResult($this->getLogResults($this->logLevels[strtoupper($level)], $channel));
         }
       }
     }
-    if ($level = $this->_getConfig('level') && is_string($level) && isset($this->logLevels[strtoupper($level)])) {
-      $this->processResult($this->getLogResults($level));
+    $level = $this->_getConfig('level');
+    if (is_string($level) && isset($this->logLevels[strtoupper($level)])) {
+      $this->processResult($this->getLogResults($this->logLevels[strtoupper($level)]));
     }
   }
 
   /**
    * Returns query result of log messages.
    *
-   * @param string $level
+   * @param int $level
    *   Log level.
    * @param string $channel
    *   Log channel.
@@ -83,7 +84,7 @@ class DrupalWatchdog extends Module {
   private function getLogResults($level, $channel = NULL) {
     $query = \Drupal::database()->select('watchdog', 'w');
     $query->fields('w', ['type', 'severity', 'message', 'variables'])
-      ->condition('severity', $this->logLevels[strtoupper($level)], '<=');
+      ->condition('severity', $level, '<=');
 
     if ($channel) {
       $query->condition('type', $channel);
