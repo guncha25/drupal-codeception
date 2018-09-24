@@ -6,9 +6,9 @@ use Codeception\Util\XpathBuilder;
 use Codeception\Util\IdentifiableFormFieldInterface;
 
 /**
- * Class Many To One Form Field provides form field path detection services.
+ * Class MTOFormField.
  *
- * @package Codeception\Util
+ * @package Codeception\Util\Drupal
  */
 class MTOFormField extends XpathBuilder implements IdentifiableFormFieldInterface {
 

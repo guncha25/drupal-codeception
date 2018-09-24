@@ -3,7 +3,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
-use Symfony\Component\Process\ProcessBuilder;
+use Codeception\Util\Drush;
 
 /**
  * Class DrupalDrush.
@@ -25,15 +25,7 @@ class DrupalDrush extends Module {
    *   The process output.
    */
   public function runDrush($command, $drush = 'drush') {
-    $command_args = array_merge([$drush], explode(' ', $command));
-    $processBuilder = new ProcessBuilder($command_args);
-
-    // Set working directory if configured.
-    if ($pwd = $this->_getConfig('working_directory')) {
-      $processBuilder->setWorkingDirectory($pwd);
-    }
-
-    return $processBuilder->getProcess()->mustRun()->getOutput();
+    return Drush::runDrush($command, $drush, $this->_getConfig('working_directory'));
   }
 
   /**

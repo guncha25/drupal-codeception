@@ -7,6 +7,8 @@ use Drupal\Core\Logger\RfcLogLevel;
 
 /**
  * Class DrupalWatchdog.
+ *
+ * @package Codeception\Module
  */
 class DrupalWatchdog extends Module {
 

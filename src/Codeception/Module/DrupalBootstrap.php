@@ -10,6 +10,8 @@ use Drupal\Core\DrupalKernel;
 
 /**
  * Class DrupalBootstrap.
+ *
+ * @package Codeception\Module
  */
 class DrupalBootstrap extends Module {
 

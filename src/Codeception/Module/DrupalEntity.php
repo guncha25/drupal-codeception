@@ -8,6 +8,8 @@ use Drupal\Core\Url;
 
 /**
  * Class DrupalEntity.
+ *
+ * @package Codeception\Module
  */
 class DrupalEntity extends Module {
 

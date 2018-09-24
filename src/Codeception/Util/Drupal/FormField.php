@@ -6,9 +6,9 @@ use Codeception\Util\XpathBuilder;
 use Codeception\Util\IdentifiableFormFieldInterface;
 
 /**
- * Class FormField provides form field path detection services.
+ * Class FormField.
  *
- * @package Codeception\Util
+ * @package Codeception\Util\Drupal
  */
 class FormField extends XpathBuilder implements IdentifiableFormFieldInterface {
 

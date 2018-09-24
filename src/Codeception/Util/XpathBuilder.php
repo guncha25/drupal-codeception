@@ -3,7 +3,7 @@
 namespace Codeception\Util;
 
 /**
- * Class FormField provides form field path detection services.
+ * Class XpathBuilder.
  *
  * @package Codeception\Util
  */
