@@ -5,6 +5,7 @@ namespace Codeception\Module;
 use Codeception\Module;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Url;
+use Codeception\TestCase;
 
 /**
  * Class DrupalEntity.
@@ -19,8 +20,9 @@ class DrupalEntity extends Module {
    * @var array
    */
   protected $config = [
-    'cleanup_after_test' => TRUE,
-    'cleanup_after_suite' => TRUE,
+    'cleanup_test' => TRUE,
+    'cleanup_failed' => TRUE,
+    'cleanup_suite' => TRUE,
   ];
 
   /**
@@ -31,34 +33,30 @@ class DrupalEntity extends Module {
   protected $entities = [];
 
   /**
-   * Executes after suite.
-   *
    * {@inheritdoc}
    */
   public function _afterSuite() { // @codingStandardsIgnoreLine
-    if ($this->config['cleanup_after_suite']) {
+    if ($this->config['cleanup_suite']) {
       $this->entityCleanup();
     }
   }
 
   /**
-   * Executes after suite.
-   *
    * {@inheritdoc}
    */
-  public function _after(\Codeception\TestCase $test) { // @codingStandardsIgnoreLine
-    if ($this->config['cleanup_after_test']) {
+  public function _after(TestCase $test) { // @codingStandardsIgnoreLine
+    if ($this->config['cleanup_test']) {
       $this->entityCleanup();
     }
   }
 
   /**
-   * Executes after suite.
-   *
    * {@inheritdoc}
    */
-  public function _failed(\Codeception\TestCase $test) { // @codingStandardsIgnoreLine
-    $this->_after($test);
+  public function _failed(TestCase $test, $fail) { // @codingStandardsIgnoreLine
+    if ($this->config['cleanup_failed']) {
+      $this->entityCleanup();
+    }
   }
 
   /**

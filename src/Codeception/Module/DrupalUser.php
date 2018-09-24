@@ -37,8 +37,10 @@ class DrupalUser extends Module {
     'default_role' => 'authenticated',
     'driver' => 'WebDriver',
     'drush' => 'drush',
-    'cleanup_after_test' => TRUE,
-    'cleanup_after_suite' => TRUE,
+    'cleanup_entities' => [],
+    'cleanup_test' => TRUE,
+    'cleanup_failed' => TRUE,
+    'cleanup_suite' => TRUE,
   ];
 
   /**
@@ -51,6 +53,9 @@ class DrupalUser extends Module {
    *
    * @return \Drupal\user\Entity\User
    *   User object.
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function createUserWithRoles(array $roles = [], $password = FALSE) {
     $faker = Factory::create();
@@ -87,6 +92,10 @@ class DrupalUser extends Module {
    *
    * @param string $role
    *   Role.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function logInWithRole($role) {
     $user = $this->createUserWithRoles([$role], Factory::create()->password(12, 14));
@@ -109,7 +118,7 @@ class DrupalUser extends Module {
    * {@inheritdoc}
    */
   public function _after(\Codeception\TestCase $test) { // @codingStandardsIgnoreLine
-    if ($this->config['cleanup_after_test']) {
+    if ($this->config['cleanup_test']) {
       $this->userCleanup();
     }
   }
@@ -117,15 +126,17 @@ class DrupalUser extends Module {
   /**
    * {@inheritdoc}
    */
-  public function _failed(\Codeception\TestCase $test) { // @codingStandardsIgnoreLine
-    $this->_after($test);
+  public function _failed(\Codeception\TestCase $test, $fail) { // @codingStandardsIgnoreLine
+    if ($this->config['cleanup_failed']) {
+      $this->userCleanup();
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function _afterSuite() { // @codingStandardsIgnoreLine
-    if ($this->config['cleanup_after_suite']) {
+    if ($this->config['cleanup_suite']) {
       $this->userCleanup();
     }
   }
@@ -133,8 +144,6 @@ class DrupalUser extends Module {
   /**
    * Delete stored entities.
    *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function userCleanup() {
@@ -157,7 +166,7 @@ class DrupalUser extends Module {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   private function deleteUsersContent($uid) {
-    $cleanup_entities = $this->_getConfig('clenup_entities');
+    $cleanup_entities = $this->_getConfig('cleanup_entities');
     if (is_array($cleanup_entities)) {
       foreach ($cleanup_entities as $cleanup_entity) {
         try {
