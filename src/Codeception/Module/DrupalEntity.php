@@ -122,7 +122,7 @@ class DrupalEntity extends Module {
     catch (\Exception $e) {
       $this->fail('Invalid entity type specified: ' . $type);
     }
-    $this->entities[$type] = $id;
+    $this->entities[$type][] = $id;
   }
 
   /**
