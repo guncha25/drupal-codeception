@@ -3,6 +3,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
+use Codeception\TestCase;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Component\Utility\Xss;
 
@@ -14,6 +15,13 @@ use Drupal\Component\Utility\Xss;
 class DrupalWatchdog extends Module {
 
   /**
+   * Log messages.
+   *
+   * @var array
+   */
+  protected $messages = [];
+
+  /**
    * Default module configuration.
    *
    * @var array
@@ -21,6 +29,8 @@ class DrupalWatchdog extends Module {
   protected $config = [
     'channels' => [],
     'level' => 'ERROR',
+    'after_test' => TRUE,
+    'after_suite' => FALSE,
   ];
 
   /**
@@ -43,6 +53,21 @@ class DrupalWatchdog extends Module {
    * {@inheritdoc}
    */
   public function _beforeSuite($settings = []) { // @codingStandardsIgnoreLine
+    if ($this->_getConfig('after_suite')) {
+      $this->prepareLogWatch();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function _before(TestCase $test) { // @codingStandardsIgnoreLine
+    if ($this->_getConfig('after_test')) {
+      $this->prepareLogWatch();
+    }
+  }
+
+  public function prepareLogWatch() {
     if (\Drupal::moduleHandler()->moduleExists('dblog')) {
       // Clear log entries from the database log.
       \Drupal::database()->truncate('watchdog')->execute();
@@ -56,6 +81,21 @@ class DrupalWatchdog extends Module {
    * {@inheritdoc}
    */
   public function _afterSuite() { // @codingStandardsIgnoreLine
+    if ($this->_getConfig('after_suite')) {
+      $this->checkLogs();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function _after(TestCase $test) { // @codingStandardsIgnoreLine
+    if ($this->_getConfig('after_test')) {
+      $this->checkLogs();
+    }
+  }
+
+  public function checkLogs() {
     $channels = $this->_getConfig('channels');
     if (!empty($channels) && is_array($channels)) {
       foreach ($this->_getConfig('channels') as $channel => $level) {
@@ -67,6 +107,9 @@ class DrupalWatchdog extends Module {
     $level = $this->_getConfig('level');
     if (is_string($level) && isset($this->logLevels[strtoupper($level)])) {
       $this->processResult($this->getLogResults($this->logLevels[strtoupper($level)]));
+    }
+    if (!empty($this->messages)) {
+      $this->fail(implode(PHP_EOL, $this->messages));
     }
   }
 
@@ -106,10 +149,7 @@ class DrupalWatchdog extends Module {
       $message = $row->type . ' - ';
       $message .= RfcLogLevel::getLevels()[$row->severity] . ': ';
       $message .= t(Xss::filterAdmin($row->message), $variables)->render(); // @codingStandardsIgnoreLine
-      $messages[] = $message;
-    }
-    if (!empty($messages)) {
-      $this->fail(implode(PHP_EOL, $messages));
+      $this->messages[] = $message;
     }
   }
 
