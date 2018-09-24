@@ -5,7 +5,7 @@ namespace Codeception\Util;
 /**
  * Class FormField provides form field path detection services.
  *
- * @package Page\Acceptance
+ * @package Codeception\Util
  */
 abstract class XpathBuilder {
 
@@ -56,7 +56,7 @@ abstract class XpathBuilder {
    * @param array $arguments
    *   Arguments like parent and position.
    *
-   * @return \Page\Acceptance\XpathBuilder
+   * @return self
    *   Returns initiated object.
    */
   public static function __callStatic($name, array $arguments) {
@@ -81,7 +81,7 @@ abstract class XpathBuilder {
    * @param string $value
    *   Replacement value.
    *
-   * @return \Page\Acceptance\XpathBuilder
+   * @return \Codeception\Util\XpathBuilder
    *   Returns self.
    */
   public function setReplacement($key, $value) {

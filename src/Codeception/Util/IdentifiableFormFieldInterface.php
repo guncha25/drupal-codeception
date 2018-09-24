@@ -5,7 +5,7 @@ namespace Codeception\Util;
 /**
  * Interface IdentifiableFormFieldInterface.
  *
- * @package Page\Acceptance
+ * @package \Codeception\Util
  */
 interface IdentifiableFormFieldInterface {
 

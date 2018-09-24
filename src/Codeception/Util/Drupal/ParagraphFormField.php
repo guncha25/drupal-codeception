@@ -5,7 +5,7 @@ namespace Codeception\Util\Drupal;
 /**
  * Class ParagraphFormField.
  *
- * @package Page\Acceptance
+ * @package Codeception\Util
  */
 class ParagraphFormField extends FormField {
 

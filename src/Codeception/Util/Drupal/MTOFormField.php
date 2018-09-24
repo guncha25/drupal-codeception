@@ -8,7 +8,7 @@ use Codeception\Util\IdentifiableFormFieldInterface;
 /**
  * Class Many To One Form Field provides form field path detection services.
  *
- * @package Page\Acceptance
+ * @package Codeception\Util
  */
 class MTOFormField extends XpathBuilder implements IdentifiableFormFieldInterface {
 
@@ -29,7 +29,7 @@ class MTOFormField extends XpathBuilder implements IdentifiableFormFieldInterfac
   /**
    * Parent of form field.
    *
-   * @var \Page\Acceptance\IdentifiableFormFieldInterface|null
+   * @var \Codeception\Util\IdentifiableFormFieldInterface|null
    */
   public $parent;
 
