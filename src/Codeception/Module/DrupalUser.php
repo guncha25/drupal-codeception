@@ -37,6 +37,8 @@ class DrupalUser extends Module {
     'default_role' => 'authenticated',
     'driver' => 'WebDriver',
     'drush' => 'drush',
+    'cleanup_after_test' => TRUE,
+    'cleanup_after_suite' => TRUE,
   ];
 
   /**
@@ -53,7 +55,7 @@ class DrupalUser extends Module {
   public function createUserWithRoles(array $roles = [], $password = FALSE) {
     $faker = Factory::create();
     /** @var \Drupal\user\Entity\User $user */
-    $user = User::create([
+    $user = \Drupal::entityTypeManager()->getStorage('user')->create([
       'name' => $faker->userName,
       'mail' => $faker->email,
       'roles' => empty($roles) ? $this->config['default_role'] : $roles,
@@ -61,25 +63,20 @@ class DrupalUser extends Module {
       'status' => 1,
     ]);
 
-    try {
-      $user->save();
-    }
-    catch (\Exception $e) {
-      $this->fail($e);
-    }
+    $user->save();
     $this->users[] = $user->id();
 
     return $user;
   }
 
   /**
-   * Log in user by id.
+   * Log in user by username.
    *
    * @param string|int $uid
    *   User id.
    */
-  public function logInWithUid($uid) {
-    $output = Drush::runDrush('uli --uid=' . $uid, $this->config['drush'], $this->_getConfig('working_directory'));
+  public function logInAs($username) {
+    $output = Drush::runDrush('uli --name=' . $username, $this->config['drush'], $this->_getConfig('working_directory'));
     $gen_url = str_replace(PHP_EOL, '', $output);
     $url = substr($gen_url, strpos($gen_url, '/user/reset'));
     $this->driver->amOnPage($url);
@@ -92,9 +89,9 @@ class DrupalUser extends Module {
    *   Role.
    */
   public function logInWithRole($role) {
-    $user = $this->createUserWithRoles([$role]);
+    $user = $this->createUserWithRoles([$role], Factory::create()->password(12, 14));
 
-    $this->logInWithRole($user->id());
+    $this->logInAs($user->getUsername());
   }
 
   /**
@@ -102,7 +99,7 @@ class DrupalUser extends Module {
    */
   public function _beforeSuite($settings = []) { // @codingStandardsIgnoreLine
     $this->driver = null;
-    if (!$this->hasModule($this->config['module'])) {
+    if (!$this->hasModule($this->_getConfig('driver'))) {
       $this->fail('User driver module not found.');
     }
     $this->driver = $this->getModule($this->config['driver']);
@@ -111,12 +108,68 @@ class DrupalUser extends Module {
   /**
    * {@inheritdoc}
    */
+  public function _after(\Codeception\TestCase $test) { // @codingStandardsIgnoreLine
+    if ($this->config['cleanup_after_test']) {
+      $this->userCleanup();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function _failed(\Codeception\TestCase $test) { // @codingStandardsIgnoreLine
+    $this->_after($test);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function _afterSuite() { // @codingStandardsIgnoreLine
+    if ($this->config['cleanup_after_suite']) {
+      $this->userCleanup();
+    }
+  }
+
+  /**
+   * Delete stored entities.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function userCleanup() {
     if (isset($this->users)) {
       $users = User::loadMultiple($this->users);
       /** @var \Drupal\user\Entity\User $user */
       foreach ($users as $user) {
+        $this->deleteUsersContent($user->id());
         $user->delete();
+      }
+    }
+  }
+
+  /**
+   * Delete user created entities.
+   *
+   * @param $uid
+   *   User id.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  private function deleteUsersContent($uid) {
+    $cleanup_entities = $this->_getConfig('clenup_entities');
+    if (is_array($cleanup_entities)) {
+      foreach ($cleanup_entities as $cleanup_entity) {
+        try {
+          $storage = \Drupal::entityTypeManager()->getStorage($cleanup_entity);
+        }
+        catch (\Exception $e) {
+          continue;
+        }
+        $entities = $storage->loadByProperties(['uid' => $uid]);
+        foreach ($entities as $entity) {
+          $entity->delete();
+        }
       }
     }
   }

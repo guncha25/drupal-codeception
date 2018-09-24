@@ -4,6 +4,7 @@ namespace Codeception\Module;
 
 use Codeception\Module;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Class DrupalWatchdog.
