@@ -29,8 +29,6 @@ class DrupalWatchdog extends Module {
   protected $config = [
     'channels' => [],
     'level' => 'ERROR',
-    'after_test' => TRUE,
-    'after_suite' => FALSE,
   ];
 
   /**
@@ -53,20 +51,12 @@ class DrupalWatchdog extends Module {
    * {@inheritdoc}
    */
   public function _beforeSuite($settings = []) { // @codingStandardsIgnoreLine
-    if ($this->_getConfig('after_suite')) {
-      $this->prepareLogWatch();
-    }
+    $this->prepareLogWatch();
   }
 
   /**
-   * {@inheritdoc}
+   * Prepares log.
    */
-  public function _before(TestCase $test) { // @codingStandardsIgnoreLine
-    if ($this->_getConfig('after_test')) {
-      $this->prepareLogWatch();
-    }
-  }
-
   public function prepareLogWatch() {
     if (\Drupal::moduleHandler()->moduleExists('dblog')) {
       // Clear log entries from the database log.
@@ -81,20 +71,12 @@ class DrupalWatchdog extends Module {
    * {@inheritdoc}
    */
   public function _afterSuite() { // @codingStandardsIgnoreLine
-    if ($this->_getConfig('after_suite')) {
-      $this->checkLogs();
-    }
+    $this->checkLogs();
   }
 
   /**
-   * {@inheritdoc}
+   * Check logs.
    */
-  public function _after(TestCase $test) { // @codingStandardsIgnoreLine
-    if ($this->_getConfig('after_test')) {
-      $this->checkLogs();
-    }
-  }
-
   public function checkLogs() {
     $channels = $this->_getConfig('channels');
     if (!empty($channels) && is_array($channels)) {
