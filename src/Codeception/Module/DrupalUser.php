@@ -72,7 +72,7 @@ class DrupalUser extends Module {
   /**
    * Log in user by username.
    *
-   * @param string|int $uid
+   * @param string|int $username
    *   User id.
    */
   public function logInAs($username) {
@@ -151,7 +151,7 @@ class DrupalUser extends Module {
   /**
    * Delete user created entities.
    *
-   * @param $uid
+   * @param string|int $uid
    *   User id.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
