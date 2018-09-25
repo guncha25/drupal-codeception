@@ -23,8 +23,7 @@ use Codeception\Util\Drush;
  *            - paragraph
  *          cleanup_test: false
  *          cleanup_failed: false
- *          cleanup_suite: true
- *
+ *          cleanup_suite: true.
  *
  * @package Codeception\Module
  */
@@ -69,6 +68,7 @@ class DrupalUser extends Module {
    *
    * @return \Drupal\user\Entity\User
    *   User object.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException

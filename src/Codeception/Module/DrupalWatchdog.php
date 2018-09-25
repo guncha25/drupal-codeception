@@ -3,7 +3,6 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
-use Codeception\TestCase;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Component\Utility\Xss;
 

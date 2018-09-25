@@ -3,7 +3,6 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Url;
 use Codeception\TestCase;
 
@@ -17,6 +16,9 @@ use Codeception\TestCase;
  *          cleanup_test: true
  *          cleanup_failed: false
  *          cleanup_suite: true
+ *          entities:
+ *            - node
+ *            - taxonomy_term.
  *
  * @package Codeception\Module
  */
@@ -31,6 +33,11 @@ class DrupalEntity extends Module {
     'cleanup_test' => TRUE,
     'cleanup_failed' => TRUE,
     'cleanup_suite' => TRUE,
+    'entity_registry' => [
+      'node',
+      'taxonomy_term',
+      'media',
+    ],
   ];
 
   /**
@@ -173,14 +180,18 @@ class DrupalEntity extends Module {
     if ($parameters = $url->getRouteParameters()) {
       // Determine if the current route represents an entity.
       foreach ($parameters as $name => $options) {
-        if (isset($options['type']) && strpos($options['type'], 'entity:') === 0) {
-          $entity = $url->getParameter($name);
-          if ($entity instanceof ContentEntityInterface && $entity->hasLinkTemplate('canonical')) {
-            return $entity;
+        $entity = $url->getRouteParameters();
+        if (in_array($name, $this->_getConfig('entities'))) {
+          try {
+            $storage = \Drupal::entityTypeManager()->getStorage($name);
+            $entity = $storage->load($options);
+            if ($entity) {
+              return $entity;
+            }
           }
-
-          // Since entity was found, no need to iterate further.
-          return FALSE;
+          catch (\Exception $e) {
+            continue;
+          }
         }
       }
     }
