@@ -8,9 +8,25 @@ use Codeception\Util\Drush;
 /**
  * Class DrupalDrush.
  *
+ * ### Example
+ * #### Example (DrupalDrush)
+ *     modules:
+ *        - DrupalDrush:
+ *          working_directory: './web'
+ *          drush: './vendor/bin/drush'
+ *
  * @package Codeception\Module
  */
 class DrupalDrush extends Module {
+
+  /**
+   * Default module configuration.
+   *
+   * @var array
+   */
+  protected $config = [
+    'drush' => 'drush',
+  ];
 
   /**
    * Execute a drush command.
@@ -18,14 +34,12 @@ class DrupalDrush extends Module {
    * @param string $command
    *   Command to run.
    *   e.g. "en devel -y".
-   * @param string $drush
-   *   The drush command to use.
    *
    * @return string
    *   The process output.
    */
-  public function runDrush($command, $drush = 'drush') {
-    return Drush::runDrush($command, $drush, $this->_getConfig('working_directory'));
+  public function runDrush($command) {
+    return Drush::runDrush($command, $this->_getConfig('drush'), $this->_getConfig('working_directory'));
   }
 
   /**

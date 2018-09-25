@@ -11,6 +11,16 @@ use Drupal\Core\DrupalKernel;
 /**
  * Class DrupalBootstrap.
  *
+ * ### Example
+ * #### Example (DrupalBootstrap)
+ *     modules:
+ *        - DrupalBootstrap:
+ *          SERVER_PORT: null
+ *          REQUEST_URI: '/'
+ *          REMOTE_ADDR: '127.0.0.1'
+ *          REQUEST_METHOD: 'GET
+ *          HTTP_HOST: 'site.multi'
+ *
  * @package Codeception\Module
  */
 class DrupalBootstrap extends Module {

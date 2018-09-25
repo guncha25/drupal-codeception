@@ -10,6 +10,14 @@ use Codeception\TestCase;
 /**
  * Class DrupalEntity.
  *
+ * ### Example
+ * #### Example (DrupalEntity)
+ *     modules:
+ *        - DrupalEntity:
+ *          cleanup_test: true
+ *          cleanup_failed: false
+ *          cleanup_suite: true
+ *
  * @package Codeception\Module
  */
 class DrupalEntity extends Module {

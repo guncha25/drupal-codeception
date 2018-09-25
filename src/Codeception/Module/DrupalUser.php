@@ -10,6 +10,22 @@ use Codeception\Util\Drush;
 /**
  * Class DrupalUser.
  *
+ * ### Example
+ * #### Example (DrupalUser)
+ *     modules:
+ *        - DrupalUser:
+ *          default_role: 'authenticated'
+ *          driver: 'PhpBrowser'
+ *          drush: './vendor/bin/drush'
+ *          cleanup_entities:
+ *            - media
+ *            - file
+ *            - paragraph
+ *          cleanup_test: false
+ *          cleanup_failed: false
+ *          cleanup_suite: true
+ *
+ *
  * @package Codeception\Module
  */
 class DrupalUser extends Module {

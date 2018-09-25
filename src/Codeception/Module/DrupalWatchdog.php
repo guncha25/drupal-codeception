@@ -10,6 +10,16 @@ use Drupal\Component\Utility\Xss;
 /**
  * Class DrupalWatchdog.
  *
+ * ### Example
+ * #### Example (DrupalWatchdog)
+ *     modules:
+ *        - DrupalWatchdog:
+ *           enabled: true
+ *           level: 'ERROR'
+ *           channels:
+ *             my_module: 'NOTICE'
+ *             php: 'WARNING'
+ *
  * @package Codeception\Module
  */
 class DrupalWatchdog extends Module {
@@ -29,6 +39,7 @@ class DrupalWatchdog extends Module {
   protected $config = [
     'channels' => [],
     'level' => 'ERROR',
+    'enabled' => TRUE,
   ];
 
   /**
@@ -51,7 +62,9 @@ class DrupalWatchdog extends Module {
    * {@inheritdoc}
    */
   public function _beforeSuite($settings = []) { // @codingStandardsIgnoreLine
-    $this->prepareLogWatch();
+    if ($this->_getConfig('enabled')) {
+      $this->prepareLogWatch();
+    }
   }
 
   /**
@@ -71,7 +84,9 @@ class DrupalWatchdog extends Module {
    * {@inheritdoc}
    */
   public function _afterSuite() { // @codingStandardsIgnoreLine
-    $this->checkLogs();
+    if ($this->_getConfig('enabled')) {
+      $this->checkLogs();
+    }
   }
 
   /**
