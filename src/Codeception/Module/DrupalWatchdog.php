@@ -95,7 +95,7 @@ class DrupalWatchdog extends Module {
    *   Setting override.
    */
   public function checkLogs(array $settings = []) {
-    $channels = isset($settings['channels']) ? $settings['channels'] :$this->_getConfig('channels');
+    $channels = isset($settings['channels']) ? $settings['channels'] : $this->_getConfig('channels');
     if (!empty($channels) && is_array($channels)) {
       foreach ($this->_getConfig('channels') as $channel => $level) {
         if (is_string($level) && isset($this->logLevels[strtoupper($level)])) {
@@ -103,7 +103,7 @@ class DrupalWatchdog extends Module {
         }
       }
     }
-    $level = isset($settings['level']) ? $settings['level'] :$this->_getConfig('level');
+    $level = isset($settings['level']) ? $settings['level'] : $this->_getConfig('level');
     if (is_string($level) && isset($this->logLevels[strtoupper($level)])) {
       $this->processResult($this->getLogResults($this->logLevels[strtoupper($level)]));
     }

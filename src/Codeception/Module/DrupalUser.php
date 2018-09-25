@@ -59,6 +59,45 @@ class DrupalUser extends Module {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  public function _beforeSuite($settings = []) { // @codingStandardsIgnoreLine
+    $this->driver = null;
+    if (!$this->hasModule($this->_getConfig('driver'))) {
+      $this->fail('User driver module not found.');
+    }
+
+    $this->driver = $this->getModule($this->_getConfig('driver'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function _after(\Codeception\TestCase $test) { // @codingStandardsIgnoreLine
+    if ($this->_getConfig('cleanup_test')) {
+      $this->userCleanup();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function _failed(\Codeception\TestCase $test, $fail) { // @codingStandardsIgnoreLine
+    if ($this->_getConfig('cleanup_failed')) {
+      $this->userCleanup();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function _afterSuite() { // @codingStandardsIgnoreLine
+    if ($this->_getConfig('cleanup_suite')) {
+      $this->userCleanup();
+    }
+  }
+
+  /**
    * Create test user with specified roles.
    *
    * @param array $roles
@@ -68,24 +107,25 @@ class DrupalUser extends Module {
    *
    * @return \Drupal\user\Entity\User
    *   User object.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function createUserWithRoles(array $roles = [], $password = FALSE) {
     $faker = Factory::create();
     /** @var \Drupal\user\Entity\User $user */
-    $user = \Drupal::entityTypeManager()->getStorage('user')->create([
-      'name' => $faker->userName,
-      'mail' => $faker->email,
-      'roles' => empty($roles) ? $this->config['default_role'] : $roles,
-      'pass' => $password ? $password : $faker->password(12, 14),
-      'status' => 1,
-    ]);
+    try {
+      $user = \Drupal::entityTypeManager()->getStorage('user')->create([
+        'name' => $faker->userName,
+        'mail' => $faker->email,
+        'roles' => empty($roles) ? $this->_getConfig('default_role') : $roles,
+        'pass' => $password ? $password : $faker->password(12, 14),
+        'status' => 1,
+      ]);
 
-    $user->save();
-    $this->users[] = $user->id();
+      $user->save();
+      $this->users[] = $user->id();
+    }
+    catch (\Exception $e) {
+      $this->fail('Could not create user with roles' . implode(', ', $roles));
+    }
 
     return $user;
   }
@@ -97,7 +137,7 @@ class DrupalUser extends Module {
    *   User id.
    */
   public function logInAs($username) {
-    $output = Drush::runDrush('uli --name=' . $username, $this->config['drush'], $this->_getConfig('working_directory'));
+    $output = Drush::runDrush('uli --name=' . $username, $this->_getConfig('drush'), $this->_getConfig('working_directory'));
     $gen_url = str_replace(PHP_EOL, '', $output);
     $url = substr($gen_url, strpos($gen_url, '/user/reset'));
     $this->driver->amOnPage($url);
@@ -109,52 +149,15 @@ class DrupalUser extends Module {
    * @param string $role
    *   Role.
    *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @return \Drupal\user\Entity\User
+   *   User object.
    */
   public function logInWithRole($role) {
     $user = $this->createUserWithRoles([$role], Factory::create()->password(12, 14));
 
     $this->logInAs($user->getUsername());
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function _beforeSuite($settings = []) { // @codingStandardsIgnoreLine
-    $this->driver = null;
-    if (!$this->hasModule($this->_getConfig('driver'))) {
-      $this->fail('User driver module not found.');
-    }
-    $this->driver = $this->getModule($this->config['driver']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function _after(\Codeception\TestCase $test) { // @codingStandardsIgnoreLine
-    if ($this->config['cleanup_test']) {
-      $this->userCleanup();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function _failed(\Codeception\TestCase $test, $fail) { // @codingStandardsIgnoreLine
-    if ($this->config['cleanup_failed']) {
-      $this->userCleanup();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function _afterSuite() { // @codingStandardsIgnoreLine
-    if ($this->config['cleanup_suite']) {
-      $this->userCleanup();
-    }
+    return $user;
   }
 
   /**
@@ -178,24 +181,36 @@ class DrupalUser extends Module {
    *
    * @param string|int $uid
    *   User id.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   private function deleteUsersContent($uid) {
+    $errors = [];
     $cleanup_entities = $this->_getConfig('cleanup_entities');
     if (is_array($cleanup_entities)) {
       foreach ($cleanup_entities as $cleanup_entity) {
+        if (!is_string($cleanup_entity)) {
+          continue;
+        }
         try {
           $storage = \Drupal::entityTypeManager()->getStorage($cleanup_entity);
         }
         catch (\Exception $e) {
+          $errors[] = 'Could not load storage ' . $cleanup_entity;
           continue;
         }
-        $entities = $storage->loadByProperties(['uid' => $uid]);
-        foreach ($entities as $entity) {
-          $entity->delete();
+        try {
+          $entities = $storage->loadByProperties(['uid' => $uid]);
+          foreach ($entities as $entity) {
+            $entity->delete();
+          }
+        }
+        catch (\Exception $e) {
+          $errors[] = 'Could not load and delete entities of type ' . $cleanup_entity . ' with uid ' . $uid;
+          continue;
         }
       }
+    }
+    if ($errors) {
+      $this->fail(implode(PHP_EOL, $errors));
     }
   }
 
