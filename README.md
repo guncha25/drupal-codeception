@@ -1,5 +1,5 @@
 # Drupal Codeception
-### General:
+## Overview
 Sets of codeception modules and utilities to test drupal cms.
 Includes:
 - Drupal Bootstrap
@@ -10,9 +10,9 @@ Includes:
 
 ## Drupal Bootstrap
 
-Provides full bootstraping in to Drupal before test. Allows using drupal API in test cases.
+Provides full bootstrapping in to Drupal before test. Allows using drupal API in test cases.
 
-Configuration:
+### Configuration
 - root: Drupal root. Defaults to codeception root + `/web`.
 - server: Server and execution environment information.
 
@@ -31,7 +31,7 @@ modules:
 
 Provides drush (`runDrush`) command.
 
-### Configuration:
+### Configuration
 - working_directory: Working directory where drush should be executed. Defaults to codeception root.
 - drush: Drush executable. Defaults to `drush`.
 ```
@@ -55,7 +55,7 @@ Get one-time login url.
 
 Provides better interaction with drupal entities and test entity cleanup service.
 
-### Configuration:
+### Configuration
 - cleanup_test: Indicator if test entities should be deleted after each test.
 - cleanup_failed: Indicator if test entities should be deleted after test fails.
 - cleanup_suite: Indicator if test entities should be deleted after suite.
@@ -75,9 +75,9 @@ modules:
 
 Create entities.
 
-`$node = $i->createEntity('title => 'My node');`
+`$node = $i->createEntity(['title => 'My node', 'type' => 'page']);`
 
-`$term = $i->createEntity('name => 'My term', 'taxonomy_term');`
+`$term = $i->createEntity(['name => 'My term', 'vid' => 'tag'], 'taxonomy_term');`
 
 Delete all stored test entities.
 
@@ -99,7 +99,7 @@ Get entity by url.
 
 Provides better interaction with drupal user and test user setup and cleanup service.
 
-### Configuration:
+### Configuration
 - default_role: Default user role if no specified. Defaults to 'authenticated'
 - driver: Driver used for interacting with site. Defaults to WebDriver.
 - drush: Drush executable. Defaults to `drush`.
@@ -140,7 +140,7 @@ Create new user with certain role and login.
 
 Provides log checking while testing.
 
-### Configuration:
+### Configuration
 - enabled: Wheather automatic check is enabled after suite. Defaults to `TRUE`
 - level: Global log level that would produce fail. Defaults to 'ERROR'.
 - channels: Individual log channel settings.
@@ -179,7 +179,7 @@ Create paragraph field with machine name field_page_elements.
 
 `$page_elements = ParagraphFormField:field_page_elements();`
 
-Get nex paragraph.
+Get next paragraph.
 
 `$page_elements->next();`
 
@@ -190,6 +190,6 @@ Fill title field value from field page elements.
 Add new paragraph of type liftup_element.
 
 ```
-    $i->click($page_elements->addMore('liftup_element'));
-    $i->waitForElementVisible($page_elements->getCurrent('Subform'));
+$i->click($page_elements->addMore('liftup_element'));
+$i->waitForElementVisible($page_elements->getCurrent('Subform'));
 ```
