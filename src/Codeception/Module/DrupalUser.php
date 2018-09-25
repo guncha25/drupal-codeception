@@ -199,12 +199,18 @@ class DrupalUser extends Module {
         }
         try {
           $entities = $storage->loadByProperties(['uid' => $uid]);
+        }
+        catch (\Exception $e) {
+          $errors[] = 'Could not load entities of type ' . $cleanup_entity . ' by uid ' . $uid;
+          continue;
+        }
+        try {
           foreach ($entities as $entity) {
             $entity->delete();
           }
         }
         catch (\Exception $e) {
-          $errors[] = 'Could not load and delete entities of type ' . $cleanup_entity . ' with uid ' . $uid;
+          $errors[] = $e->getMessage();
           continue;
         }
       }
