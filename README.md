@@ -42,11 +42,14 @@ modules:
 ```
 
 ### Usage
-Run drush config import and store output.
-`$output = $i->runDrush('cim -y');`
-Get one-time login url.
-`$uri = $i->getLoginUri('userName');`
 
+Run drush config import and store output.
+
+`$output = $i->runDrush('cim -y');`
+
+Get one-time login url.
+
+`$uri = $i->getLoginUri('userName');`
 
 ## Drupal Entity
 
@@ -69,16 +72,27 @@ modules:
 ```
 
 ### Usage
+
 Create entities.
+
 `$node = $i->createEntity('title => 'My node');`
+
 `$term = $i->createEntity('name => 'My term', 'taxonomy_term');`
+
 Delete all stored test entities.
+
 `$i->doEntityCleanup();`
+
 Register test entity.
+
 `$i->registerTestEntity('node', '99');`
+
 Register test entity by url.
+
 `$i->registerTestEntityByUrl($i->grabFromCurrentUrl());`
+
 Get entity by url.
+
 `$entity = $i->getEntityFromUrl($i->grabFromCurrentUrl());`
 
 ## Drupal User
@@ -108,11 +122,17 @@ modules:
 ```
 
 ### Usage
+
 Create test user with specified roles.
+
 `$user = $i->createUserWithRoles(['editor', 'authenticated'], 'password');`
+
 Log in user by username.
+
 `$i->loginAs('userName');`
+
 Create new user with certain role and login.
+
 `$i->logInWithRole('administrator');`
 
 
@@ -135,7 +155,41 @@ modules:
 ```
 
 ### Usage
+
 Clean logs.
+
 `$i->prepareLogWatch();`
+
 Check logs.
+
 `$i->checkLogs();`
+
+## Drupal Fields Utility
+
+Provides xpath builder object for drupal specific form field xpath retrieval.
+
+Includes:
+    - FormField: Fields that can be set to cardinality unlimited
+    - MTOFormField: Single value fields.
+    - ParagraphFormField: Paragraph form fields.
+    
+### Usage
+
+Create paragraph field with machine name field_page_elements.
+
+`$page_elements = ParagraphFormField:field_page_elements();`
+
+Get nex paragraph.
+
+`$page_elements->next();`
+
+Fill title field value from field page elements.
+
+`$i->fillField(FormField::title($page_elements)->value);`
+
+Add new paragraph of type liftup_element.
+
+```
+    $i->click($page_elements->addMore('liftup_element'));
+    $i->waitForElementVisible($page_elements->getCurrent('Subform'));
+```
