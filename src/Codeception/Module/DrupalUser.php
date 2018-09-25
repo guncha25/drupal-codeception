@@ -162,7 +162,7 @@ class DrupalUser extends Module {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function userCleanup() {
+  private function userCleanup() {
     if (isset($this->users)) {
       $users = User::loadMultiple($this->users);
       /** @var \Drupal\user\Entity\User $user */

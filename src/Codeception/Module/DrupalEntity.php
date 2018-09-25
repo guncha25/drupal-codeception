@@ -16,7 +16,7 @@ use Codeception\TestCase;
  *          cleanup_test: true
  *          cleanup_failed: false
  *          cleanup_suite: true
- *          entities:
+ *          route_entities:
  *            - node
  *            - taxonomy_term.
  *
@@ -33,7 +33,7 @@ class DrupalEntity extends Module {
     'cleanup_test' => TRUE,
     'cleanup_failed' => TRUE,
     'cleanup_suite' => TRUE,
-    'entity_registry' => [
+    'route_entities' => [
       'node',
       'taxonomy_term',
       'media',
@@ -52,7 +52,7 @@ class DrupalEntity extends Module {
    */
   public function _afterSuite() { // @codingStandardsIgnoreLine
     if ($this->config['cleanup_suite']) {
-      $this->entityCleanup();
+      $this->doEntityCleanup();
     }
   }
 
@@ -61,7 +61,7 @@ class DrupalEntity extends Module {
    */
   public function _after(TestCase $test) { // @codingStandardsIgnoreLine
     if ($this->config['cleanup_test']) {
-      $this->entityCleanup();
+      $this->doEntityCleanup();
     }
   }
 
@@ -70,7 +70,7 @@ class DrupalEntity extends Module {
    */
   public function _failed(TestCase $test, $fail) { // @codingStandardsIgnoreLine
     if ($this->config['cleanup_failed']) {
-      $this->entityCleanup();
+      $this->doEntityCleanup();
     }
   }
 
@@ -111,7 +111,7 @@ class DrupalEntity extends Module {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function entityCleanup() {
+  public function doEntityCleanup() {
     foreach ($this->entities as $type => $ids) {
       $entities = \Drupal::entityTypeManager()
         ->getStorage($type)
@@ -141,32 +141,6 @@ class DrupalEntity extends Module {
   }
 
   /**
-   * Get entity by name.
-   *
-   * @param string $name
-   *   Name property of entity.
-   * @param string $type
-   *   Entity type.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface|bool
-   *   Media entity.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function getEntityByName($name, $type = 'node') {
-    $entities = \Drupal::entityTypeManager()
-      ->getStorage($type)
-      ->loadByProperties(['name' => $name]);
-
-    if (!empty($entities)) {
-      return end($entities);
-    }
-
-    return FALSE;
-  }
-
-  /**
    * Gets entity form route.
    *
    * @param string $url
@@ -181,7 +155,7 @@ class DrupalEntity extends Module {
       // Determine if the current route represents an entity.
       foreach ($parameters as $name => $options) {
         $entity = $url->getRouteParameters();
-        if (in_array($name, $this->_getConfig('entities'))) {
+        if (in_array($name, $this->_getConfig('route_entities'))) {
           try {
             $storage = \Drupal::entityTypeManager()->getStorage($name);
             $entity = $storage->load($options);

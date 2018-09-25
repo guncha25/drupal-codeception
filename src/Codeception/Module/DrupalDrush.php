@@ -45,16 +45,16 @@ class DrupalDrush extends Module {
   /**
    * Gets login uri.
    *
-   * @param string $uid
+   * @param string $name
    *   User id.
    *
    * @return bool|string
    *   Login uri.
    */
-  public function getLoginUri($uid = '') {
+  public function getLoginUri($name = '') {
     $user = '';
     if (!empty($uid)) {
-      $user = '--uid=' . $uid;
+      $user = '--name=' . $name;
     }
     $gen_url = str_replace(PHP_EOL, '', $this->runDrush('uli ' . $user));
 
