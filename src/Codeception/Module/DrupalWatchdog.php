@@ -89,10 +89,13 @@ class DrupalWatchdog extends Module {
   }
 
   /**
-   * Check logs.
+   * Check log.
+   *
+   * @param array $settings
+   *   Setting override.
    */
-  public function checkLogs() {
-    $channels = $this->_getConfig('channels');
+  public function checkLogs(array $settings = []) {
+    $channels = isset($settings['channels']) ? $settings['channels'] :$this->_getConfig('channels');
     if (!empty($channels) && is_array($channels)) {
       foreach ($this->_getConfig('channels') as $channel => $level) {
         if (is_string($level) && isset($this->logLevels[strtoupper($level)])) {
@@ -100,7 +103,7 @@ class DrupalWatchdog extends Module {
         }
       }
     }
-    $level = $this->_getConfig('level');
+    $level = isset($settings['level']) ? $settings['level'] :$this->_getConfig('level');
     if (is_string($level) && isset($this->logLevels[strtoupper($level)])) {
       $this->processResult($this->getLogResults($this->logLevels[strtoupper($level)]));
     }
@@ -138,7 +141,6 @@ class DrupalWatchdog extends Module {
    *   Query result.
    */
   protected function processResult($result) {
-    $messages = [];
     foreach ($result as $row) {
       // Build a readable message and declare a failure.
       $variables = @unserialize($row->variables);
