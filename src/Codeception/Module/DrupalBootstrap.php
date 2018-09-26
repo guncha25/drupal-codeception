@@ -61,6 +61,7 @@ class DrupalBootstrap extends Module {
         $_SERVER[$key] = $value;
       }
     }
+    chdir($this->_getConfig('root'));
     $request = Request::createFromGlobals();
     $autoloader = require $this->_getConfig('root') . '/autoload.php';
     $kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod');
