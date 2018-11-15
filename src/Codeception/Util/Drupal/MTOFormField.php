@@ -69,6 +69,15 @@ class MTOFormField extends XpathBuilder implements IdentifiableFormFieldInterfac
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function __toString() {
+    $name = isset($this->parent) ? strval($this->parent) . ' > ' : '';
+    $name .= ucfirst(str_replace('_', ' ', preg_replace('@^field_@', '', $this->fieldName)));
+    return $name;
+  }
+
+  /**
    * Returns xpath of current identifiers element.
    *
    * @param string $name

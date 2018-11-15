@@ -164,6 +164,49 @@ Check logs.
 
 `$i->checkLogs();`
 
+## Drupal Acceptance
+
+Provides helper methods to interact with drupal via webdriver.
+
+```
+modules:
+    - DrupalAcceptance:
+```
+
+### Usage
+
+```
+// Fill title.
+$i->fillTextField(FormField::title(), 'Mans nosukums');
+
+// Select english language for content.
+$i->selectOptionFromList(FormField::langcode(), 'en');
+
+// Fill first paragraph of type text.
+$page_elements = ParagraphFormField::field_page_elements();
+$i->fillWysiwygEditor(FormField::field_text_formatted($page_elements), 'Lorem');
+
+// Remove text paragraph.
+$i->removeParagraph($page_elements);
+
+// Add second paragraph of type graybox.
+$i->addParagraph('graybox', $page_elements->next());
+
+// Fill title of graybox.
+$i->fillTextField(FormField::field_title($page_elements), 'Mans nosukums');
+
+// Fill link field.
+$i->fillLinkField(FormField::field_link($page_elements), 'http://example.com', 'Example');
+
+// Add taxonomy term reference for tags field.
+$field_tags = FormField::field_tags();
+$i->fillReferenceField(FormField::field_tags(), Fixtures::get('term1'));
+$i->addReferenceFieldItem($field_tags->next());
+$i->fillReferenceField($field_tags, Fixtures::get('term2'));
+
+$i->clickOn(FormField::submit());
+```
+
 ## Drupal Fields Utility
 
 Provides xpath builder object for drupal specific form field xpath retrieval.
