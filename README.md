@@ -7,6 +7,17 @@ Includes:
 - Drupal User
 - Drupal Watchdog
 - Drupal Drush
+- Drupal Acceptance
+
+## Installation
+
+Require package:
+
+```composer require guncha25/drupal-codeception --dev```
+
+If codeception was not previously set up:
+
+```./vendor/bin/codecept init```
 
 ## Drupal Bootstrap
 
