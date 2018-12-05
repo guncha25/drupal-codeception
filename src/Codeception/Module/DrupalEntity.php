@@ -3,6 +3,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Url;
 use Codeception\TestCase;
 
@@ -90,6 +91,17 @@ class DrupalEntity extends Module {
       $entity = \Drupal::entityTypeManager()
         ->getStorage($type)
         ->create($values);
+      if ($entity instanceof FieldableEntityInterface) {
+        $violations = $entity->validate();
+        if ($violations->count() > 0) {
+          $message = '';
+          foreach ($violations as $violation) {
+            $message .= $violation->getMessage() . PHP_EOL;
+          }
+          throw new \Exception($message);
+        }
+      }
+
       $entity->save();
     }
     catch (\Exception $e) {
