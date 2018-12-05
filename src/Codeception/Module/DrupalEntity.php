@@ -94,9 +94,9 @@ class DrupalEntity extends Module {
       if ($entity instanceof FieldableEntityInterface) {
         $violations = $entity->validate();
         if ($violations->count() > 0) {
-          $message = '';
+          $message = PHP_EOL;
           foreach ($violations as $violation) {
-            $message .= $violation->getMessage() . PHP_EOL;
+            $message .= $violation->getPropertyPath() . ': ' . $violation->getMessage() . PHP_EOL;
           }
           throw new \Exception($message);
         }
