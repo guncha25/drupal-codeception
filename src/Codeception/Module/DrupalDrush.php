@@ -14,6 +14,9 @@ use Codeception\Util\Drush;
  *        - DrupalDrush:
  *          working_directory: './web'
  *          drush: './vendor/bin/drush'
+ *          options:
+ *            uri: localhost
+ *            root: ./web
  *
  * @package Codeception\Module
  */
@@ -26,6 +29,7 @@ class DrupalDrush extends Module {
    */
   protected $config = [
     'drush' => 'drush',
+    'options' => [],
   ];
 
   /**
@@ -34,12 +38,39 @@ class DrupalDrush extends Module {
    * @param string $command
    *   Command to run.
    *   e.g. "en devel -y".
+   * @param array $options
+   *   Associative array of options.
    *
    * @return string
    *   The process output.
    */
-  public function runDrush($command) {
+  public function runDrush($command, array $options = []) {
+    if (!empty($options)) {
+      $command = $this->normalizeOptions($options) . $command;
+    }
+    elseif ($this->_getConfig('options')) {
+      $command = $this->normalizeOptions($this->_getConfig('options')) . $command;
+    }
     return Drush::runDrush($command, $this->_getConfig('drush'), $this->_getConfig('working_directory'));
+  }
+
+  /**
+   * Returns options as sting.
+   *
+   * @param array $options
+   *   Associative array of options.
+   *
+   * @return string
+   *    Sring of options.
+   */
+  protected function normalizeOptions(array $options) {
+    $command = '';
+    foreach ($options as $key => $value) {
+      if (is_string($value)) {
+        $command .= '--' . $key . '=' . $value . ' ';
+      }
+    }
+    return $command;
   }
 
   /**
