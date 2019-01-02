@@ -50,6 +50,9 @@ modules:
     - DrupalDrush:
         working_directory: './web'
         drush: './vendor/bin/drush'
+          options:
+            uri: http://mydomain.com
+            root: /app/web
 ```
 
 ### Usage
