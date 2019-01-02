@@ -15,8 +15,8 @@ use Codeception\Util\Drush;
  *          working_directory: './web'
  *          drush: './vendor/bin/drush'
  *          options:
- *            uri: localhost
- *            root: ./web
+ *            uri: http://mydomain.com
+ *            root: /app/web
  *
  * @package Codeception\Module
  */
