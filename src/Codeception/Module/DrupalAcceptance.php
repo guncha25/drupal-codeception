@@ -53,7 +53,7 @@ class DrupalAcceptance extends Module {
    */
   public function addParagraph($type, ParagraphFormField $field) {
     $this->webdriver->click($field->addMore($type));
-    $this->webdriver->waitForElementVisible($field->getCurrent('subform'));
+    $this->webdriver->waitForElementClickable($field->getCurrent('subform'));
   }
 
   /**
@@ -64,7 +64,7 @@ class DrupalAcceptance extends Module {
    */
   public function removeParagraph(ParagraphFormField $paragraph) {
     $this->webdriver->click($paragraph->get($paragraph->position . ' top links remove button'));
-    $this->webdriver->waitForElementVisible($paragraph->get($paragraph->position . ' top links confirm remove button'));
+    $this->webdriver->waitForElementClickable($paragraph->get($paragraph->position . ' top links confirm remove button'));
     $this->webdriver->click($paragraph->get($paragraph->position . ' top links confirm remove button'));
     $this->webdriver->waitForElementNotVisible($paragraph->getCurrent('Subform'));
   }
@@ -142,7 +142,7 @@ class DrupalAcceptance extends Module {
    */
   public function addReferenceFieldItem(FormField $field) {
     $this->webdriver->click($field->addMore());
-    $this->webdriver->waitForElementVisible($field->target_id);
+    $this->webdriver->waitForElementClickable($field->target_id);
   }
 
   /**

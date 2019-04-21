@@ -84,7 +84,7 @@ class DrupalDrush extends Module {
    */
   public function getLoginUri($name = '') {
     $user = '';
-    if (!empty($uid)) {
+    if (!empty($name)) {
       $user = '--name=' . $name;
     }
     $gen_url = str_replace(PHP_EOL, '', $this->runDrush('uli ' . $user));
