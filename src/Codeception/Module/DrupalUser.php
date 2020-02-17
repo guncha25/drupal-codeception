@@ -139,7 +139,7 @@ class DrupalUser extends Module {
    *   User id.
    */
   public function logInAs($username) {
-    $alias = $this->_getConfig('alias') ? $this->_getConfig('alias') . '' : '';
+    $alias = $this->_getConfig('alias') ? $this->_getConfig('alias') . ' ' : '';
     $output = Drush::runDrush($alias. 'uli --name=' . $username, $this->_getConfig('drush'), $this->_getConfig('working_directory'));
     $gen_url = str_replace(PHP_EOL, '', $output);
     $url = substr($gen_url, strpos($gen_url, '/user/reset'));
