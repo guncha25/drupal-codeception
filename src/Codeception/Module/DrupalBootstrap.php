@@ -16,12 +16,7 @@ use Drupal\Core\DrupalKernel;
  *     modules:
  *        - DrupalBootstrap:
  *          root: './web'
- *          server:
- *            SERVER_PORT: null
- *            REQUEST_URI: '/'
- *            REMOTE_ADDR: '127.0.0.1'
- *            REQUEST_METHOD: 'GET
- *            HTTP_HOST: 'site.multi'
+ *          site_path: 'sites/default'
  *
  * @package Codeception\Module
  */
@@ -33,11 +28,7 @@ class DrupalBootstrap extends Module {
    * @var array
    */
   protected $config = [
-    'server' => [
-      'REQUEST_URI' => '/',
-      'REMOTE_ADDR' => '127.0.0.1',
-      'REQUEST_METHOD' => 'GET',
-    ],
+    'site_path' => 'sites/default',
   ];
 
   /**
@@ -56,21 +47,11 @@ class DrupalBootstrap extends Module {
     if (!isset($this->config['root'])) {
       $this->_setConfig(['root' => Configuration::projectDir() . 'web']);
     }
-    foreach ($this->_getConfig('server') as $key => $value) {
-      if (!is_null($value)) {
-        $_SERVER[$key] = $value;
-      }
-    }
     chdir($this->_getConfig('root'));
     $request = Request::createFromGlobals();
     $autoloader = require $this->_getConfig('root') . '/autoload.php';
-    $kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod');
-    try {
-      $kernel->boot();
-    }
-    catch (\Exception $e) {
-      $this->fail($e->getMessage());
-    }
+    $kernel = new TestDrupalKernel('prod', $autoloader, $this->_getConfig('root'));
+    $kernel->bootTestEnvironment($this->_getConfig('site_path'));
     $kernel->prepareLegacyRequest($request);
   }
 

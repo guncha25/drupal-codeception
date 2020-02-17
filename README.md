@@ -234,7 +234,7 @@ Includes:
 
 Create paragraph field with machine name field_page_elements.
 
-`$page_elements = ParagraphFormField:field_page_elements();`
+`$page_elements = ParagraphFormField::field_page_elements();`
 
 Get next paragraph.
 
