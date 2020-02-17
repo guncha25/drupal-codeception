@@ -23,7 +23,8 @@ use Codeception\Util\Drush;
  *            - paragraph
  *          cleanup_test: false
  *          cleanup_failed: false
- *          cleanup_suite: true.
+ *          cleanup_suite: true
+ *          alias: @site.com
  *
  * @package Codeception\Module
  */
@@ -49,6 +50,7 @@ class DrupalUser extends Module {
    * @var array
    */
   protected $config = [
+    'alias' => '',
     'default_role' => 'authenticated',
     'driver' => 'WebDriver',
     'drush' => 'drush',
@@ -137,7 +139,8 @@ class DrupalUser extends Module {
    *   User id.
    */
   public function logInAs($username) {
-    $output = Drush::runDrush('uli --name=' . $username, $this->_getConfig('drush'), $this->_getConfig('working_directory'));
+    $alias = $this->_getConfig('alias') ? $this->_getConfig('alias') . '' : '';
+    $output = Drush::runDrush($alias. 'uli --name=' . $username, $this->_getConfig('drush'), $this->_getConfig('working_directory'));
     $gen_url = str_replace(PHP_EOL, '', $output);
     $url = substr($gen_url, strpos($gen_url, '/user/reset'));
     $this->driver->amOnPage($url);

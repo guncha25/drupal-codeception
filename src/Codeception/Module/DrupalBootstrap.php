@@ -5,6 +5,7 @@ namespace Codeception\Module;
 use Codeception\Configuration;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Module;
+use Codeception\TestDrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\DrupalKernel;
 
