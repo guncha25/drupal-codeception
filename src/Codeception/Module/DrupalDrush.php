@@ -14,6 +14,7 @@ use Codeception\Util\Drush;
  *        - DrupalDrush:
  *          working_directory: './web'
  *          drush: './vendor/bin/drush'
+ *          alias: '@mysite.com'
  *          options:
  *            uri: http://mydomain.com
  *            root: /app/web
@@ -29,6 +30,7 @@ class DrupalDrush extends Module {
    */
   protected $config = [
     'drush' => 'drush',
+    'alias' => '',
     'options' => [],
   ];
 
@@ -45,6 +47,9 @@ class DrupalDrush extends Module {
    *   The process output.
    */
   public function runDrush($command, array $options = []) {
+    if ($alias = $this->_getConfig('alias')) {
+      $command = $alias . ' ' . $command;
+    }
     if (!empty($options)) {
       $command = $this->normalizeOptions($options) . $command;
     }
