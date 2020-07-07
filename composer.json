@@ -9,8 +9,10 @@
         }
     ],
     "require": {
-        "codeception/codeception": "^2.3 || ^3.0",
-        "fzaninotto/faker": "^1.8"
+        "codeception/codeception": "^4.0",
+        "fzaninotto/faker": "^1.8",
+        "codeception/module-webdriver": "^1.1",
+        "webflo/drupal-finder": "^1.2"
     },
     "require-dev": {
         "composer/installers": "^1",
