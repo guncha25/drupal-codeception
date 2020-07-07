@@ -24,13 +24,12 @@ If codeception was not previously set up:
 Provides full bootstrapping in to Drupal before test. Allows using drupal API in test cases.
 
 ### Configuration
-- root: Drupal root. Defaults to codeception root + `/web`.
 - server: Server and execution environment information.
+- root: Drupal root. Uses DrupalFinder to detect the Drupal root. Falls back to codeception root + `/web`. (optional)
 
 ```
 modules:
     - DrupalBootstrap:
-        root: './web'
         server:
             SERVER_PORT: null
             REQUEST_URI: '/'
@@ -229,7 +228,7 @@ Includes:
     - FormField: Fields that can be set to cardinality unlimited
     - MTOFormField: Single value fields.
     - ParagraphFormField: Paragraph form fields.
-    
+
 ### Usage
 
 Create paragraph field with machine name field_page_elements.
