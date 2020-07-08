@@ -8,6 +8,8 @@ use Codeception\Module;
 use Codeception\TestDrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\DrupalKernel;
+use DrupalFinder\DrupalFinder;
+
 
 /**
  * Class DrupalBootstrap.
@@ -46,7 +48,19 @@ class DrupalBootstrap extends Module {
   public function __construct(ModuleContainer $container, $config = NULL) {
     parent::__construct($container, $config);
     if (!isset($this->config['root'])) {
-      $this->_setConfig(['root' => Configuration::projectDir() . 'web']);
+
+      $drupalFinder = new DrupalFinder();
+
+      $drupalFinder->locateRoot(getcwd());
+      $drupalRoot = $drupalFinder->getDrupalRoot();
+
+      // Autodetect Drupal root.
+      if ($drupalRoot) {
+        $this->_setConfig(['root' => $drupalRoot]);
+      }
+      else {
+        $this->_setConfig(['root' => Configuration::projectDir() . 'web']);
+      }
     }
     chdir($this->_getConfig('root'));
     $request = Request::createFromGlobals();
