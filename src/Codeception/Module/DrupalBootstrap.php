@@ -20,6 +20,7 @@ use DrupalFinder\DrupalFinder;
  *        - DrupalBootstrap:
  *          root: './web'
  *          site_path: 'sites/default'
+ *          http_host: 'mysite.local'
  *
  * @package Codeception\Module
  */
@@ -63,6 +64,9 @@ class DrupalBootstrap extends Module {
       }
     }
     chdir($this->_getConfig('root'));
+    if (isset($this->config['http_host'])) {
+      $_SERVER['HTTP_HOST'] = $this->config['http_host'];
+    }
     $request = Request::createFromGlobals();
     $autoloader = require $this->_getConfig('root') . '/autoload.php';
     $kernel = new TestDrupalKernel('prod', $autoloader, $this->_getConfig('root'));
