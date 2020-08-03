@@ -82,16 +82,18 @@ class DrupalEntity extends Module {
    *   Data for creating entity.
    * @param string $type
    *   Entity type.
+   * @param bool $validate
+   *   Flag to validate entity fields..
    *
    * @return \Drupal\Core\Entity\EntityInterface|bool
    *   Created entity.
    */
-  public function createEntity(array $values = [], $type = 'node') {
+  public function createEntity(array $values = [], $type = 'node', $validate = TRUE) {
     try {
       $entity = \Drupal::entityTypeManager()
         ->getStorage($type)
         ->create($values);
-      if ($entity instanceof FieldableEntityInterface) {
+      if ($validate && $entity instanceof FieldableEntityInterface) {
         $violations = $entity->validate();
         if ($violations->count() > 0) {
           $message = PHP_EOL;
