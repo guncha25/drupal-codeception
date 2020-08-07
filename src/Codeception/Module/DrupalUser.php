@@ -174,7 +174,11 @@ class DrupalUser extends Module {
       /** @var \Drupal\user\Entity\User $user */
       foreach ($users as $user) {
         $this->deleteUsersContent($user->id());
-        $user->delete();
+        try {
+          $user->delete();
+        } catch (\Exception $e) {
+          continue;
+        }
       }
     }
   }
