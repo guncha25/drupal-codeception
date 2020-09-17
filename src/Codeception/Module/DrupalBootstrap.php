@@ -7,7 +7,6 @@ use Codeception\Lib\ModuleContainer;
 use Codeception\Module;
 use Codeception\TestDrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\Core\DrupalKernel;
 use DrupalFinder\DrupalFinder;
 
 
@@ -70,8 +69,7 @@ class DrupalBootstrap extends Module {
     $request = Request::createFromGlobals();
     $autoloader = require $this->_getConfig('root') . '/autoload.php';
     $kernel = new TestDrupalKernel('prod', $autoloader, $this->_getConfig('root'));
-    $kernel->bootTestEnvironment($this->_getConfig('site_path'));
-    $kernel->prepareLegacyRequest($request);
+    $kernel->bootTestEnvironment($this->_getConfig('site_path'), $request);
   }
 
 }
