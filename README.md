@@ -17,7 +17,7 @@ Require package:
 
 If codeception was not previously set up:
 
-```./vendor/bin/codecept init```
+```./vendor/bin/codecept bootstrap```
 
 ## Drupal Bootstrap
 
