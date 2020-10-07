@@ -21,7 +21,7 @@ If codeception was not previously set up:
 
 If you require only one suite for now (e.g. acceptance):
 
-```vendor/bin/codecept init acceptance```
+```./vendor/bin/codecept init acceptance```
 
 ## Drupal Bootstrap
 
