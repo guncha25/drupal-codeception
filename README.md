@@ -19,6 +19,10 @@ If codeception was not previously set up:
 
 ```./vendor/bin/codecept bootstrap```
 
+If you require only one suite for now (e.g. acceptance):
+
+```vendor/bin/codecept init acceptance```
+
 ## Drupal Bootstrap
 
 Provides full bootstrapping in to Drupal before test. Allows using drupal API in test cases.
