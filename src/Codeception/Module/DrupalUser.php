@@ -3,6 +3,8 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
+use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\user\Entity\User;
 use Faker\Factory;
 use Codeception\Util\Drush;
@@ -158,7 +160,7 @@ class DrupalUser extends Module {
   public function logInWithRole($role) {
     $user = $this->createUserWithRoles([$role], Factory::create()->password(12, 14));
 
-    $this->logInAs($user->getUsername());
+    $this->logInAs($user->getAccountName());
 
     return $user;
   }
@@ -198,6 +200,7 @@ class DrupalUser extends Module {
           continue;
         }
         try {
+            /** @var EntityStorageInterface $storage */
           $storage = \Drupal::entityTypeManager()->getStorage($cleanup_entity);
         }
         catch (\Exception $e) {
@@ -205,7 +208,13 @@ class DrupalUser extends Module {
           continue;
         }
         try {
-          $entities = $storage->loadByProperties(['uid' => $uid]);
+          $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($cleanup_entity);
+          foreach ($bundles as $bundle) {
+            $all_bundle_fields = \Drupal::service('entity_field.manager')->getFieldDefinitions($cleanup_entity, $bundle);
+            if (isset($all_bundle_fields['uid'])) {
+              $entities = $storage->loadByProperties(['uid' => $uid]);
+            }
+          }
         }
         catch (\Exception $e) {
           $errors[] = 'Could not load entities of type ' . $cleanup_entity . ' by uid ' . $uid;
