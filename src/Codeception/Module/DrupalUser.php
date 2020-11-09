@@ -200,7 +200,7 @@ class DrupalUser extends Module {
           continue;
         }
         try {
-            /** @var EntityStorageInterface $storage */
+          /** @var EntityStorageInterface $storage */
           $storage = \Drupal::entityTypeManager()->getStorage($cleanup_entity);
         }
         catch (\Exception $e) {
@@ -209,7 +209,7 @@ class DrupalUser extends Module {
         }
         try {
           $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($cleanup_entity);
-          foreach ($bundles as $bundle) {
+          foreach ($bundles as $bundle => $bundle_data) {
             $all_bundle_fields = \Drupal::service('entity_field.manager')->getFieldDefinitions($cleanup_entity, $bundle);
             if (isset($all_bundle_fields['uid'])) {
               $entities = $storage->loadByProperties(['uid' => $uid]);
