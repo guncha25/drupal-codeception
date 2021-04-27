@@ -75,7 +75,7 @@ class DrupalWatchdog extends Module {
       \Drupal::database()->truncate('watchdog')->execute();
     }
     else {
-      $this->fail('Database loging is not enabled.');
+      $this->fail('Database logging is not enabled. Please enable dblog module to continue.');
     }
   }
 
