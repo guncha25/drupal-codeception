@@ -3,11 +3,9 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\user\Entity\User;
 use Faker\Factory;
-use Codeception\Util\Drush;
 
 /**
  * Class DrupalUser.
@@ -17,8 +15,6 @@ use Codeception\Util\Drush;
  *     modules:
  *        - DrupalUser:
  *          default_role: 'authenticated'
- *          driver: 'PhpBrowser'
- *          drush: './vendor/bin/drush'
  *          cleanup_entities:
  *            - media
  *            - file
@@ -52,27 +48,12 @@ class DrupalUser extends Module {
    * @var array
    */
   protected $config = [
-    'alias' => '',
     'default_role' => 'authenticated',
-    'driver' => 'WebDriver',
-    'drush' => 'drush',
     'cleanup_entities' => [],
     'cleanup_test' => TRUE,
     'cleanup_failed' => TRUE,
     'cleanup_suite' => TRUE,
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  public function _beforeSuite($settings = []) { // @codingStandardsIgnoreLine
-    $this->driver = null;
-    if (!$this->hasModule($this->_getConfig('driver'))) {
-      $this->fail('User driver module not found.');
-    }
-
-    $this->driver = $this->getModule($this->_getConfig('driver'));
-  }
 
   /**
    * {@inheritdoc}
@@ -141,11 +122,21 @@ class DrupalUser extends Module {
    *   User id.
    */
   public function logInAs($username) {
-    $alias = $this->_getConfig('alias') ? $this->_getConfig('alias') . ' ' : '';
-    $output = Drush::runDrush($alias. 'uli --name=' . $username, $this->_getConfig('drush'), $this->_getConfig('working_directory'));
-    $gen_url = str_replace(PHP_EOL, '', $output);
-    $url = substr($gen_url, strpos($gen_url, '/user/reset'));
-    $this->driver->amOnPage($url);
+    /** @var \Drupal\user\Entity\User $user */
+    try {
+      // Load the user.
+      $account = user_load_by_name($username);
+
+      if (FALSE === $account ) {
+        throw new \Exception();
+      }
+
+      // Login with the user.
+      user_login_finalize($account);
+    }
+    catch (\Exception $e) {
+      $this->fail('Coud not login with username ' . $username);
+    }
   }
 
   /**
