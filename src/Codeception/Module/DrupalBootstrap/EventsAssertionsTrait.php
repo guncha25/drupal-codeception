@@ -9,7 +9,6 @@ use Drupal\webprofiler\EventDispatcher\EventDispatcherTraceableInterface;
 use function get_class;
 use function is_array;
 use function is_object;
-use function strpos;
 
 /**
  *

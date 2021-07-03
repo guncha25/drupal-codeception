@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use DrupalFinder\DrupalFinder;
 use Codeception\Module\DrupalBootstrap\EventsAssertionsTrait;
 
-
 /**
  * Class DrupalBootstrap.
  *
