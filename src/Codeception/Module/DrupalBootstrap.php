@@ -8,6 +8,7 @@ use Codeception\Module;
 use Codeception\TestDrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 use DrupalFinder\DrupalFinder;
+use Codeception\Module\DrupalBootstrap\EventsAssertionsTrait;
 
 
 /**
@@ -24,6 +25,8 @@ use DrupalFinder\DrupalFinder;
  * @package Codeception\Module
  */
 class DrupalBootstrap extends Module {
+
+  use EventsAssertionsTrait;
 
   /**
    * Default module configuration.
