@@ -74,4 +74,24 @@ class DrupalBootstrap extends Module {
     $kernel->bootTestEnvironment($this->_getConfig('site_path'), $request);
   }
 
+  /**
+   * Enabled dependent modules.
+   */
+  public function _beforeSuite($settings = []) {
+    $module_handler = \Drupal::service('module_handler');
+    if (!$module_handler->moduleExists('webprofiler')) {
+      $this->enabledWebProfiler = TRUE;
+      \Drupal::service('module_installer')->install(['webprofiler']);
+    }
+  }
+
+  /**
+   * Disable modules which were enabled.
+   */
+  public function _afterSuite($settings = []) {
+    if ($this->enabledWebProfiler) {
+      $this->enabledWebProfiler = FALSE;
+      \Drupal::service('module_installer')->uninstall(['webprofiler']);
+    }
+
 }
