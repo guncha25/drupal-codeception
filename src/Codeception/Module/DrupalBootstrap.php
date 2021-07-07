@@ -93,5 +93,6 @@ class DrupalBootstrap extends Module {
       $this->enabledWebProfiler = FALSE;
       \Drupal::service('module_installer')->uninstall(['webprofiler']);
     }
+  }
 
 }
