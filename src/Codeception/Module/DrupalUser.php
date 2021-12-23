@@ -128,7 +128,8 @@ class DrupalUser extends Module {
       $this->users[] = $user->id();
     }
     catch (\Exception $e) {
-      $this->fail('Could not create user with roles' . implode(', ', $roles));
+      $message = sprintf('Could not create user with roles: %s. Error: %s', implode(', ', $roles), $e->getMessage());
+      $this->fail($message);
     }
 
     return $user;
