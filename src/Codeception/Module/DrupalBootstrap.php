@@ -37,6 +37,13 @@ class DrupalBootstrap extends Module {
   ];
 
   /**
+   * Track wether we enabled the webprofiler module or not.
+   *
+   * @var bool
+   */
+  protected $enabledWebProfiler = FALSE;
+
+  /**
    * DrupalBootstrap constructor.
    *
    * @param \Codeception\Lib\ModuleContainer $container
