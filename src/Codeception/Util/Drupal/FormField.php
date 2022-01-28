@@ -90,15 +90,16 @@ class FormField extends XpathBuilder implements IdentifiableFormFieldInterface {
   /**
    * Returns xpath of current identifiers element.
    *
-   * @param string $name
+   * @param string $element
    *   Name of element.
    *
    * @return string
    *   Returns path with current identifier plus requested subfield.
    */
-  public function __get($name) {
+  public function __get($element = '') {
+    $suffix = $element ? '-' . $this->normalise($element) : '';
     return $this->getXpath([
-      'identifier' => $this->getCurrentIdentifier() . '-' . $this->normalise($name),
+      'identifier' => $this->getCurrentIdentifier() . $suffix,
     ]);
   }
 
@@ -142,7 +143,7 @@ class FormField extends XpathBuilder implements IdentifiableFormFieldInterface {
    * @param string $element
    *   Name of element.
    *
-   * @return mixed
+   * @return string
    *   Returns path with identifier plus requested subfield.
    */
   public function get($element = '') {
