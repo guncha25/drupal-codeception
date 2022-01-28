@@ -91,9 +91,11 @@ class DrupalAcceptance extends Module {
    * @param string $title
    *   Title.
    */
-  public function fillLinkField(IdentifiableFormFieldInterface $field, $uri, $title) {
+  public function fillLinkField(IdentifiableFormFieldInterface $field, $uri, $title = NULL) {
     $this->webdriver->fillField($field->uri, $uri);
-    $this->webdriver->fillField($field->title, $title);
+    if (isset($title)) {
+      $this->webdriver->fillField($field->title, $title);
+    }
   }
 
   /**

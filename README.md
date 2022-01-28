@@ -214,6 +214,7 @@ $i->fillTextField(FormField::field_title($page_elements), 'Mans nosukums');
 
 // Fill link field.
 $i->fillLinkField(FormField::field_link($page_elements), 'http://example.com', 'Example');
+$i->fillLinkField(FormField::field_link($page_elements), 'http://example.com');
 
 // Add taxonomy term reference for tags field.
 $field_tags = FormField::field_tags();
