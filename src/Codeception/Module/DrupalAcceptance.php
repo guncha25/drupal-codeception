@@ -123,6 +123,24 @@ class DrupalAcceptance extends Module {
   }
 
   /**
+   * Select nth option from select list.
+   *
+   * Useful if you don't know what the options in the list are, and just want
+   * to select the first one, second one etc.
+   *
+   * @param \Codeception\Util\IdentifiableFormFieldInterface $field
+   *   Select list form field.
+   * @param int $nth
+   *   Nth option to get. Default to first option.
+   * @param string $target
+   *   Target field.
+   */
+  public function selectNthOptionFromList(IdentifiableFormFieldInterface $field, $nth = 1, $target = 'value') {
+    $option = $this->webdriver->grabTextFrom($field->{$target} . '/option[' . $nth . ']');
+    $this->selectOptionFromList($field, $option, $target);
+  }
+
+  /**
    * Click on element.
    *
    * @param \Codeception\Util\IdentifiableFormFieldInterface $field

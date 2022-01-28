@@ -196,8 +196,16 @@ modules:
 // Fill title.
 $i->fillTextField(FormField::title(), 'Mans nosukums');
 
-// Select english language for content.
+// Select option from select list by key or value.
+// For custom fields, target (last parameter) usually needs to be set to an 
+// empty string.
 $i->selectOptionFromList(FormField::langcode(), 'en');
+$i->selectOptionFromList(FormField::langcode(), 'English');
+$i->selectOptionFromList(FormField::field_my_list(), 'Apple', '');
+
+// Select the nth option from a select list.
+$i->selectOptionFromList(FormField::langcode());
+$i->selectNthOptionFromList(MTOFormField::field_my_list(), 2, '');
 
 // Fill first paragraph of type text.
 $page_elements = ParagraphFormField::field_page_elements();
