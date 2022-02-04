@@ -21,11 +21,16 @@ class Drush {
    *   The drush command to use.
    * @param string $pwd
    *   Working directory.
+   * @param int|float $timeout.
+   *   Drush execution timeout.
+   * @param bool $return_process
+   *   If TRUE, the Process object will be returned. If false, the output of
+   *   Process::getOutput() will be returned. Defaults to FALSE.
    *
-   * @return string
-   *   The process output.
+   * @return string|\Symfony\Component\Process\Process
+   *   The process output, or the process object itself.
    */
-  public static function runDrush($command, $drush = 'drush', $pwd = NULL) {
+  public static function runDrush($command, $drush = 'drush', $pwd = NULL, $timeout = NULL, $return_process = FALSE) {
     $command_args = array_merge([$drush], explode(' ', $command));
     $process = new Process($command_args);
 
@@ -34,7 +39,14 @@ class Drush {
       $process->setWorkingDirectory($pwd);
     }
 
-    return $process->mustRun()->getOutput();
+    // Set timeout if configured.
+    if (isset($timeout)) {
+      $process->setTimeout($timeout);
+    }
+
+    $process->mustRun();
+
+    return $return_process ? $process : $process->getOutput();
   }
 
 }

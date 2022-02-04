@@ -13,6 +13,7 @@ use Codeception\Util\Drush;
  *     modules:
  *        - DrupalDrush:
  *          working_directory: './web'
+ *          timeout: 120
  *          drush: './vendor/bin/drush'
  *          alias: '@mysite.com'
  *          options:
@@ -42,11 +43,14 @@ class DrupalDrush extends Module {
    *   e.g. "en devel -y".
    * @param array $options
    *   Associative array of options.
+   * @param bool $return_process
+   *   If TRUE, the Process object will be returned. If false, the output of
+   *   Process::getOutput() will be returned. Defaults to FALSE.
    *
-   * @return string
-   *   The process output.
+   * @return string|\Symfony\Component\Process\Process
+   *   The process output, or the process itself.
    */
-  public function runDrush($command, array $options = []) {
+  public function runDrush($command, array $options = [], $return_process = FALSE) {
     if ($alias = $this->_getConfig('alias')) {
       $command = $alias . ' ' . $command;
     }
@@ -56,7 +60,7 @@ class DrupalDrush extends Module {
     elseif ($this->_getConfig('options')) {
       $command = $this->normalizeOptions($this->_getConfig('options')) . $command;
     }
-    return Drush::runDrush($command, $this->_getConfig('drush'), $this->_getConfig('working_directory'));
+    return Drush::runDrush($command, $this->_getConfig('drush'), $this->_getConfig('working_directory'), $this->_getConfig('timeout'), $return_process);
   }
 
   /**
