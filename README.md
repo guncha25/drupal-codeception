@@ -47,11 +47,13 @@ Provides drush (`runDrush`) command.
 
 ### Configuration
 - working_directory: Working directory where drush should be executed. Defaults to codeception root.
+- timeout: Timeout in seconds for drush command. Set to 0 for no timeout. Default to 60 seconds.
 - drush: Drush executable. Defaults to `drush`.
 ```
 modules:
     - DrupalDrush:
         working_directory: './web'
+        timeout: 120
         drush: './vendor/bin/drush'
           options:
             uri: http://mydomain.com
@@ -60,9 +62,17 @@ modules:
 
 ### Usage
 
-Run drush config import and store output.
+Run drush status and store output.
 
-`$output = $i->runDrush('cim -y');`
+`$output = $i->runDrush('status');`
+
+Run drush config import and store output from STDERR.
+
+`$output = $i->runDrush('cim -y', [], TRUE)->getErrorOutput();`
+
+Run drush cache rebuild and store the exit code.
+
+`$exit_code = $i->runDrush('cr', [], TRUE)->getExitCode();`
 
 Get one-time login url.
 
