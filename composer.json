@@ -10,7 +10,7 @@
   ],
   "require": {
     "codeception/codeception": "^5",
-    "codeception/module-webdriver": "^4",
+    "codeception/module-webdriver": "^3",
     "webflo/drupal-finder": "^1.2",
     "fakerphp/faker": "^1.19"
   },
