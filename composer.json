@@ -16,7 +16,7 @@
   },
   "require-dev": {
     "composer/installers": "^2",
-    "drupal/core": "^9 || ^10"
+    "drupal/core": "^10"
   },
   "license": "GPL-2.0",
   "authors": [
