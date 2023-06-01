@@ -8,7 +8,7 @@ use Codeception\Module;
 use Codeception\TestDrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 use DrupalFinder\DrupalFinder;
-
+use Codeception\Module\DrupalBootstrap\EventsAssertionsTrait;
 
 /**
  * Class DrupalBootstrap.
@@ -25,6 +25,8 @@ use DrupalFinder\DrupalFinder;
  */
 class DrupalBootstrap extends Module {
 
+  use EventsAssertionsTrait;
+
   /**
    * Default module configuration.
    *
@@ -33,6 +35,13 @@ class DrupalBootstrap extends Module {
   protected $config = [
     'site_path' => 'sites/default',
   ];
+
+  /**
+   * Track wether we enabled the webprofiler module or not.
+   *
+   * @var bool
+   */
+  protected $enabledWebProfiler = FALSE;
 
   /**
    * DrupalBootstrap constructor.
@@ -70,6 +79,27 @@ class DrupalBootstrap extends Module {
     $autoloader = require $this->_getConfig('root') . '/autoload.php';
     $kernel = new TestDrupalKernel('prod', $autoloader, $this->_getConfig('root'));
     $kernel->bootTestEnvironment($this->_getConfig('site_path'), $request);
+  }
+
+  /**
+   * Enabled dependent modules.
+   */
+  public function _beforeSuite($settings = []) {
+    $module_handler = \Drupal::service('module_handler');
+    if (!$module_handler->moduleExists('webprofiler')) {
+      $this->enabledWebProfiler = TRUE;
+      \Drupal::service('module_installer')->install(['webprofiler']);
+    }
+  }
+
+  /**
+   * Disable modules which were enabled.
+   */
+  public function _afterSuite($settings = []) {
+    if ($this->enabledWebProfiler) {
+      $this->enabledWebProfiler = FALSE;
+      \Drupal::service('module_installer')->uninstall(['webprofiler']);
+    }
   }
 
 }
