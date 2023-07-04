@@ -1,39 +1,39 @@
 {
-    "name": "wunderio/drupal-codeception",
-    "description": "Codeception toolset for Drupal testing.",
-    "type": "package",
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packages.drupal.org/8"
-        }
-    ],
-    "require": {
-        "codeception/codeception": "^4.2",
-        "codeception/module-webdriver": "^2.0",
-        "webflo/drupal-finder": "^1.2",
-        "fakerphp/faker": "^1.19"
-    },
-    "require-dev": {
-        "composer/installers": "^2",
-        "drupal/core": "^9"
-    },
-    "license": "GPL-2.0",
-    "authors": [
-        {
-            "name": "Guntis Jakovins",
-            "email": "guntis.jakovins@gmail.com"
-        }
-    ],
-    "minimum-stability": "stable",
-    "autoload": {
-        "psr-4": {
-            "Codeception\\": "src/Codeception"
-        }
-    },
-    "config": {
-        "allow-plugins": {
-            "composer/installers": true
-        }
+  "name": "wunderio/drupal-codeception",
+  "description": "Codeception toolset for Drupal testing.",
+  "type": "package",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
     }
+  ],
+  "require": {
+    "codeception/codeception": "^5",
+    "codeception/module-webdriver": "^3",
+    "webflo/drupal-finder": "^1.2",
+    "fakerphp/faker": "^1.19"
+  },
+  "require-dev": {
+    "composer/installers": "^2",
+    "drupal/core": "^10"
+  },
+  "license": "GPL-2.0",
+  "authors": [
+    {
+      "name": "Guntis Jakovins",
+      "email": "guntis.jakovins@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "Codeception\\": "src/Codeception"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
 }

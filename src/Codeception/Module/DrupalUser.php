@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\user\Entity\User;
 use Faker\Factory;
 use Codeception\Util\Drush;
+use Codeception\TestInterface;
 
 /**
  * Class DrupalUser.
@@ -51,7 +52,7 @@ class DrupalUser extends Module {
    *
    * @var array
    */
-  protected $config = [
+  protected array $config = [
     'alias' => '',
     'default_role' => 'authenticated',
     'driver' => 'WebDriver',
@@ -77,7 +78,7 @@ class DrupalUser extends Module {
   /**
    * {@inheritdoc}
    */
-  public function _after(\Codeception\TestCase $test) { // @codingStandardsIgnoreLine
+  public function _after(TestInterface $test) { // @codingStandardsIgnoreLine
     if ($this->_getConfig('cleanup_test')) {
       $this->userCleanup();
     }
@@ -86,7 +87,7 @@ class DrupalUser extends Module {
   /**
    * {@inheritdoc}
    */
-  public function _failed(\Codeception\TestCase $test, $fail) { // @codingStandardsIgnoreLine
+  public function _failed(TestInterface $test, $fail) { // @codingStandardsIgnoreLine
     if ($this->_getConfig('cleanup_failed')) {
       $this->userCleanup();
     }

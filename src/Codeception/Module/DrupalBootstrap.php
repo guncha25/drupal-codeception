@@ -30,7 +30,7 @@ class DrupalBootstrap extends Module {
    *
    * @var array
    */
-  protected $config = [
+  protected array $config = [
     'site_path' => 'sites/default',
   ];
 
