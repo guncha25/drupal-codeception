@@ -17,9 +17,9 @@ use DrupalFinder\DrupalFinder;
  * #### Example (DrupalBootstrap)
  *     modules:
  *        - DrupalBootstrap:
- *          root: './web'
- *          site_path: 'sites/default'
- *          http_host: 'mysite.local'
+ *            root: './web'
+ *            site_path: 'sites/default'
+ *            http_host: 'mysite.local'
  *
  * @package Codeception\Module
  */
@@ -30,7 +30,7 @@ class DrupalBootstrap extends Module {
    *
    * @var array
    */
-  protected $config = [
+  protected array $config = [
     'site_path' => 'sites/default',
   ];
 

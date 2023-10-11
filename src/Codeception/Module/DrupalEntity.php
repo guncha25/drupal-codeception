@@ -3,9 +3,11 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
+use Codeception\TestInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Url;
 use Codeception\TestCase;
+use Exception;
 
 /**
  * Class DrupalEntity.
@@ -14,12 +16,12 @@ use Codeception\TestCase;
  * #### Example (DrupalEntity)
  *     modules:
  *        - DrupalEntity:
- *          cleanup_test: true
- *          cleanup_failed: false
- *          cleanup_suite: true
- *          route_entities:
- *            - node
- *            - taxonomy_term.
+ *            cleanup_test: true
+ *            cleanup_failed: false
+ *            cleanup_suite: true
+ *            route_entities:
+ *              - node
+ *              - taxonomy_term.
  *
  * @package Codeception\Module
  */
@@ -30,7 +32,7 @@ class DrupalEntity extends Module {
    *
    * @var array
    */
-  protected $config = [
+  protected array $config = [
     'cleanup_test' => TRUE,
     'cleanup_failed' => TRUE,
     'cleanup_suite' => TRUE,
@@ -60,7 +62,7 @@ class DrupalEntity extends Module {
   /**
    * {@inheritdoc}
    */
-  public function _after(TestCase $test) { // @codingStandardsIgnoreLine
+  public function _after(TestInterface $test) { // @codingStandardsIgnoreLine
     if ($this->config['cleanup_test']) {
       $this->doEntityCleanup();
     }
@@ -69,7 +71,7 @@ class DrupalEntity extends Module {
   /**
    * {@inheritdoc}
    */
-  public function _failed(TestCase $test, $fail) { // @codingStandardsIgnoreLine
+  public function _failed(TestInterface $test, Exception $fail) { // @codingStandardsIgnoreLine
     if ($this->config['cleanup_failed']) {
       $this->doEntityCleanup();
     }

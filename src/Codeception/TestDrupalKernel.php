@@ -4,11 +4,11 @@ namespace Codeception;
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
-class TestDrupalKernel extends DrupalKernel{
+class TestDrupalKernel extends DrupalKernel {
 
   /**
    * TestDrupalKernel constructor.
