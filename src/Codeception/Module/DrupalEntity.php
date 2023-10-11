@@ -6,7 +6,6 @@ use Codeception\Module;
 use Codeception\TestInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Url;
-use Codeception\TestCase;
 use Exception;
 
 /**
