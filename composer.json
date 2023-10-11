@@ -10,11 +10,11 @@
     ],
     "require": {
         "codeception/codeception": "^5",
-        "codeception/module-webdriver": "^4",
+        "codeception/module-webdriver": "^3 || ^4",
         "webflo/drupal-finder": "^1.2",
         "fakerphp/faker": "^1.23",
-        "codeception/module-phpbrowser": "*",
-        "codeception/module-asserts": "*"
+        "codeception/module-phpbrowser": "^3",
+        "codeception/module-asserts": "^3"
     },
     "require-dev": {
         "composer/installers": "^2",
