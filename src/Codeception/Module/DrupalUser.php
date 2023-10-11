@@ -143,7 +143,7 @@ class DrupalUser extends Module {
    */
   public function logInAs($username) {
     $alias = $this->_getConfig('alias') ? $this->_getConfig('alias') . ' ' : '';
-    $output = Drush::runDrush($alias. 'uli --name=' . $username, $this->_getConfig('drush'), $this->_getConfig('working_directory'));
+    $output = Drush::runDrush($alias. 'uli --name=' . $username, $this->_getConfig('drush'), $this->_getConfig('working_directory'), $this->_getConfig('timeout'));
     $gen_url = str_replace(PHP_EOL, '', $output);
     $url = substr($gen_url, strpos($gen_url, '/user/reset'));
     $this->driver->amOnPage($url);
