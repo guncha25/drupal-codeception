@@ -9,14 +9,14 @@
         }
     ],
     "require": {
-        "codeception/codeception": "^4.2",
-        "codeception/module-webdriver": "^2.0",
+        "codeception/codeception": "^4 || ^5",
+        "codeception/module-webdriver": "^3 || ^4",
         "webflo/drupal-finder": "^1.2",
         "fakerphp/faker": "^1.23"
     },
     "require-dev": {
         "composer/installers": "^2",
-        "drupal/core": "^9"
+        "drupal/core": "^9 || ^10"
     },
     "license": "GPL-2.0",
     "authors": [
