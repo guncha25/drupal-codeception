@@ -80,16 +80,14 @@ class MTOFormField extends XpathBuilder implements IdentifiableFormFieldInterfac
   /**
    * Returns xpath of current identifiers element.
    *
-   * @param string $name
+   * @param string $element
    *   Name of element.
    *
    * @return string
    *   Returns path with current identifier plus requested subfield.
    */
-  public function __get($name) {
-    return $this->getXpath([
-      'identifier' => $this->getIdentifier() . '-' . $this->normalise($name),
-    ]);
+  public function __get($element = '') {
+    return $this->get($element);
   }
 
   /**
@@ -132,7 +130,7 @@ class MTOFormField extends XpathBuilder implements IdentifiableFormFieldInterfac
    * @param string $element
    *   Name of element.
    *
-   * @return mixed
+   * @return string
    *   Returns path with identifier plus requested subfield.
    */
   public function get($element = '') {
