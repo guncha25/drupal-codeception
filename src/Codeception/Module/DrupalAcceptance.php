@@ -176,6 +176,12 @@ class DrupalAcceptance extends Module {
   public function fillWysiwygEditor(IdentifiableFormFieldInterface $field, $content) {
     $selector = $this->webdriver->grabAttributeFrom($field->value, 'id');
     $script = "jQuery(function(){CKEDITOR.instances[\"$selector\"].setData(\"$content\")});";
+    // Check if CKEditor5 is in use. If so, override the script as global
+    // registry of editor instances is no longer available and a different
+    // approach is used to access them via DOM.
+    if (!empty($this->webdriver->grabAttributeFrom($field->value, 'data-ckeditor5-id'))) {
+      $script = "document.querySelector(\"#$selector\").nextSibling.querySelector(\".ck-editor__editable_inline\").ckeditorInstance.setData(\"$content\")";
+    }
     $this->webdriver->executeInSelenium(function (RemoteWebDriver $webDriver) use ($script) {
       $webDriver->executeScript($script);
     });
